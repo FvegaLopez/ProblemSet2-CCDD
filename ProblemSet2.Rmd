@@ -3,3 +3,18 @@ title: "ProblemSet2"
 output: html_document
 ---
 
+```{r, warning=FALSE, message=FALSE}
+# Carga de librerias
+library(dplyr)
+library(haven)
+library(tidyr)
+library(ggplot2)
+library(modelsummary)
+```
+
+```{r}
+bbdd = read_dta("./data/casestudy_dropout.dta")
+bbdd
+```
+
+
