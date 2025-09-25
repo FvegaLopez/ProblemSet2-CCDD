@@ -5,11 +5,13 @@ output: html_document
 
 ```{r, warning=FALSE, message=FALSE}
 # Carga de librerias
+# --- Paquetes ---
+library(haven)      # leer .dta
+library(ggplot2)    # gráficos
+library(rddensity)  # test de manipulación
+library(fixest)     # regresiones con FE
+library(rdrobust)   # rdplot
 library(dplyr)
-library(haven)
-library(tidyr)
-library(ggplot2)
-library(modelsummary)
 ```
 
 ```{r}
@@ -17,4 +19,55 @@ bbdd = read_dta("./data/casestudy_dropout.dta")
 bbdd
 ```
 
+### Pregunta 1
 
+```{r}
+# ============================================================
+# 1. Test de manipulación de la running variable
+# ============================================================
+
+# Histograma de la running variable con cutoff
+ggplot(bbdd, aes(x = SchoolDaysFromMay302022)) +
+  geom_histogram(binwidth = 1, fill = "steelblue", color = "white", alpha = 0.7) +
+  geom_vline(xintercept = 0, color = "red", linetype = "dashed", size = 1) +
+  labs(title = "Distribución de la running variable",
+       x = "SchoolDaysFromMay302022", y = "Frecuencia")
+
+# Test de densidad
+rdd_test <- rddensity(X = bbdd$SchoolDaysFromMay302022, c = 0)
+summary(rdd_test)
+```
+
+### Pregunta 2
+
+```{r}
+# ============================================================
+# 2. First stage graph
+# ============================================================
+
+# (a) Gráfico
+# (a) Gráfico con bbdd
+ggplot(bbdd, aes(x = SchoolDaysFromMay302022, y = ListedInDropoutReport)) +
+  geom_point(alpha = 0.3) +
+  geom_vline(xintercept = 0, color = "red", linetype = "dashed") +
+  geom_smooth(data = subset(bbdd, SchoolDaysFromMay302022 < 0),
+              method = "lm", se = FALSE, color = "blue") +
+  geom_smooth(data = subset(bbdd, SchoolDaysFromMay302022 >= 0),
+              method = "lm", se = FALSE, color = "green") +
+  labs(title = "First stage graph",
+       x = "Running variable (days from May 30)",
+       y = "Prob. de estar listado en el reporte")
+
+
+# (b) Regresión con FE por escuela
+fs_model <- feols(ListedInDropoutReport ~ DroppedOutMay30Before *
+                    SchoolDaysFromMay302022 | IDschool, data = bbdd)
+summary(fs_model)
+
+# (c) Incluir FE por día de la semana
+fs_model_dow <- feols(ListedInDropoutReport ~ DroppedOutMay30Before *
+                        SchoolDaysFromMay302022 | IDschool + DayOfWeekDroppedOut,
+                      data = bbdd)
+summary(fs_model_dow)
+
+```
