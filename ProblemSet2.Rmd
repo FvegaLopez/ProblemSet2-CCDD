@@ -71,3 +71,8 @@ fs_model_dow <- feols(ListedInDropoutReport ~ DroppedOutMay30Before *
 summary(fs_model_dow)
 
 ```
+
+```{r}
+#Esta le toca al MJ
+```
+
