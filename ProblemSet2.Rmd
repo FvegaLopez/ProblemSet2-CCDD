@@ -75,4 +75,3 @@ summary(fs_model_dow)
 ```{r}
 #Esta le toca al MJ
 ```
-
