@@ -12,6 +12,7 @@ library(rddensity)  # test de manipulación
 library(fixest)     # regresiones con FE
 library(rdrobust)   # rdplot
 library(dplyr)
+library(ggpubr)     # Combinar gráficos
 ```
 
 ```{r}
@@ -72,6 +73,88 @@ summary(fs_model_dow)
 
 ```
 
+### Pregunta 3
 ```{r}
-#Esta le toca al MJ
+
+#RD lineal EnrolledByAug312022
+
+rd_enrolled <- feols(
+  EnrolledByAug312022 ~ DroppedOutMay30Before + SchoolDaysFromMay302022 + DroppedOutMay30Before:SchoolDaysFromMay302022 | 
+  IDschool + DayOfWeekDroppedOut,
+  data = bbdd, cluster = "IDschool" #esto hace que los errores estándar se ajusten por correlación dentro de cada escuela
+)
+summary(rd_enrolled)
+
+#RD lineal GraduatedIn2022
+rd_graduated <- feols(
+  GraduatedIn2022 ~ DroppedOutMay30Before + SchoolDaysFromMay302022 + DroppedOutMay30Before:SchoolDaysFromMay302022 | 
+  IDschool + DayOfWeekDroppedOut,
+  data = bbdd, cluster = "IDschool"
+)
+summary(rd_graduated)
+
+
 ```
+
+
+### Pregunta 4
+```{r}
+#EnrolledByAug312022
+plot_enrolled <- rdplot(y = bbdd$EnrolledByAug312022, x = bbdd$SchoolDaysFromMay302022, c = 0,
+                        title = "Revinculación al 31 de agosto")
+
+#GraduatedIn2022
+plot_graduated <- rdplot(y = bbdd$GraduatedIn2022, x = bbdd$SchoolDaysFromMay302022, c = 0,
+                         title = "Graduación en 2022")
+
+#Gráficos
+g1 <- plot_enrolled$rdplot
+g2 <- plot_graduated$rdplot
+
+#Combinar gráficos 
+ggarrange(g1, g2, ncol = 2, nrow = 1)
+
+```
+
+
+### Pregunta 5
+```{r}
+#EnrolledByAug312022 con términos cuadráticos
+rd_quad_enrolled <- feols(
+  EnrolledByAug312022 ~ DroppedOutMay30Before +
+    SchoolDaysFromMay302022 + I(SchoolDaysFromMay302022^2) +
+    DroppedOutMay30Before:SchoolDaysFromMay302022 + DroppedOutMay30Before:I(SchoolDaysFromMay302022^2) |
+    IDschool + DayOfWeekDroppedOut,
+  data = bbdd, cluster = "IDschool"
+)
+summary(rd_quad_enrolled)
+
+#GraduatedIn2022 con términos cuadráticos
+rd_quad_graduated <- feols(
+  GraduatedIn2022 ~ DroppedOutMay30Before +
+    SchoolDaysFromMay302022 + I(SchoolDaysFromMay302022^2) +
+    DroppedOutMay30Before:SchoolDaysFromMay302022 + DroppedOutMay30Before:I(SchoolDaysFromMay302022^2) |
+    IDschool + DayOfWeekDroppedOut,
+  data = bbdd, cluster = "IDschool"
+)
+summary(rd_quad_graduated)
+
+```
+
+
+### Pregunta 6
+```{r}
+#Proyección cuadrática
+plot_quad <- rdplot(y = bbdd$EnrolledByAug312022, x = bbdd$SchoolDaysFromMay302022, c = 0, p = 2,
+                    title = "Revinculación - Proyección cuadrática")
+
+#Proyección cúbica
+plot_cubic <- rdplot(y = bbdd$EnrolledByAug312022, x = bbdd$SchoolDaysFromMay302022, c = 0, p = 3,
+                     title = "Revinculación - Proyección cúbica")
+
+#Combinar ambos gráficos
+ggarrange(plot_quad$rdplot, plot_cubic$rdplot, ncol = 2, nrow = 1)
+
+```
+
+### WAR
