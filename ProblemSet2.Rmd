@@ -23,20 +23,45 @@ bbdd
 ### Pregunta 1
 
 ```{r}
-# ============================================================
-# 1. Test de manipulación de la running variable
-# ============================================================
-
-# Histograma de la running variable con cutoff
 ggplot(bbdd, aes(x = SchoolDaysFromMay302022)) +
-  geom_histogram(binwidth = 1, fill = "steelblue", color = "white", alpha = 0.7) +
+  geom_histogram(binwidth = 1, fill = "lightblue", color = "black") +
   geom_vline(xintercept = 0, color = "red", linetype = "dashed", size = 1) +
   labs(title = "Distribución de la running variable",
-       x = "SchoolDaysFromMay302022", y = "Frecuencia")
+       x = "Días escolares desde 30 de mayo 2022",
+       y = "Frecuencia")
 
-# Test de densidad
-rdd_test <- rddensity(X = bbdd$SchoolDaysFromMay302022, c = 0)
-summary(rdd_test)
+# 1. Construir tabla de frecuencias
+freq_df <- bbdd %>%
+  count(SchoolDaysFromMay302022)
+
+# 2. Ajustar regresiones lineales a cada lado del cutoff
+lm_left  <- lm(n ~ SchoolDaysFromMay302022, data = subset(freq_df, SchoolDaysFromMay302022 < 0))
+lm_right <- lm(n ~ SchoolDaysFromMay302022, data = subset(freq_df, SchoolDaysFromMay302022 >= 0))
+
+# 3. Graficar histograma + líneas ajustadas
+ggplot(freq_df, aes(x = SchoolDaysFromMay302022, y = n)) +
+  geom_col(fill = "lightblue", color = "black") +
+  geom_vline(xintercept = 0, color = "red", linetype = "dashed", size = 1) +
+  geom_smooth(data = subset(freq_df, SchoolDaysFromMay302022 < 0),
+              method = "lm", se = FALSE, color = "blue") +
+  geom_smooth(data = subset(freq_df, SchoolDaysFromMay302022 >= 0),
+              method = "lm", se = FALSE, color = "green") +
+  labs(title = "Distribución de la running variable con ajuste lineal",
+       x = "Días escolares desde 30 de mayo 2022",
+       y = "Frecuencia")
+
+# Test de densidad en el cutoff
+dens_test <- rddensity(X = bbdd$SchoolDaysFromMay302022, c = 0)
+summary(dens_test)
+
+# Gráfico de la densidad estimada
+rdplotdensity(dens_test, bbdd$SchoolDaysFromMay302022)
+
+
+
+
+
+
 ```
 
 ### Pregunta 2
@@ -74,6 +99,7 @@ summary(fs_model_dow)
 ```
 
 ### Pregunta 3
+
 ```{r}
 
 #RD lineal EnrolledByAug312022
@@ -96,8 +122,8 @@ summary(rd_graduated)
 
 ```
 
-
 ### Pregunta 4
+
 ```{r}
 #EnrolledByAug312022
 plot_enrolled <- rdplot(y = bbdd$EnrolledByAug312022, x = bbdd$SchoolDaysFromMay302022, c = 0,
@@ -116,8 +142,8 @@ ggarrange(g1, g2, ncol = 2, nrow = 1)
 
 ```
 
-
 ### Pregunta 5
+
 ```{r}
 #EnrolledByAug312022 con términos cuadráticos
 rd_quad_enrolled <- feols(
@@ -141,8 +167,8 @@ summary(rd_quad_graduated)
 
 ```
 
-
 ### Pregunta 6
+
 ```{r}
 #Proyección cuadrática
 plot_quad <- rdplot(y = bbdd$EnrolledByAug312022, x = bbdd$SchoolDaysFromMay302022, c = 0, p = 2,
