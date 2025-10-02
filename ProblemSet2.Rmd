@@ -13,6 +13,7 @@ library(fixest)     # regresiones con FE
 library(rdrobust)   # rdplot
 library(dplyr)
 library(ggpubr)     # Combinar gráficos
+library(modelsummary)
 ```
 
 ```{r}
@@ -23,12 +24,17 @@ bbdd
 ### Pregunta 1
 
 ```{r}
-ggplot(bbdd, aes(x = SchoolDaysFromMay302022)) +
+# --- Gráfico 1: histograma simple ---
+p1 <- ggplot(bbdd, aes(x = SchoolDaysFromMay302022)) +
   geom_histogram(binwidth = 1, fill = "lightblue", color = "black") +
   geom_vline(xintercept = 0, color = "red", linetype = "dashed", size = 1) +
   labs(title = "Distribución de la running variable",
        x = "Días escolares desde 30 de mayo 2022",
        y = "Frecuencia")
+
+p1
+
+ggsave(filename ="./outputs/grafico1_histograma.png", plot = p1, width = 7, height = 5)
 
 # 1. Construir tabla de frecuencias
 freq_df <- bbdd %>%
@@ -39,7 +45,7 @@ lm_left  <- lm(n ~ SchoolDaysFromMay302022, data = subset(freq_df, SchoolDaysFro
 lm_right <- lm(n ~ SchoolDaysFromMay302022, data = subset(freq_df, SchoolDaysFromMay302022 >= 0))
 
 # 3. Graficar histograma + líneas ajustadas
-ggplot(freq_df, aes(x = SchoolDaysFromMay302022, y = n)) +
+p2 <- ggplot(freq_df, aes(x = SchoolDaysFromMay302022, y = n)) +
   geom_col(fill = "lightblue", color = "black") +
   geom_vline(xintercept = 0, color = "red", linetype = "dashed", size = 1) +
   geom_smooth(data = subset(freq_df, SchoolDaysFromMay302022 < 0),
@@ -50,11 +56,20 @@ ggplot(freq_df, aes(x = SchoolDaysFromMay302022, y = n)) +
        x = "Días escolares desde 30 de mayo 2022",
        y = "Frecuencia")
 
+p2
+
+ggsave(filename = "./outputs/grafico2_histograma_lineal.png", plot = p2, width = 7, height = 5)
+
+
 # Test de densidad en el cutoff
 dens_test <- rddensity(X = bbdd$SchoolDaysFromMay302022, c = 0)
 summary(dens_test)
 
-# Gráfico de la densidad estimada
+# Guardar gráfico de densidad
+png(filename = "./outputs/grafico3_rddensity.png", width = 800, height = 600)
+rdplotdensity(dens_test, bbdd$SchoolDaysFromMay302022)
+dev.off()
+
 rdplotdensity(dens_test, bbdd$SchoolDaysFromMay302022)
 
 
@@ -71,37 +86,50 @@ rdplotdensity(dens_test, bbdd$SchoolDaysFromMay302022)
 # 2. First stage graph
 # ============================================================
 
-ggplot(bbdd, aes(x = SchoolDaysFromMay302022, y = ListedInDropoutReport)) +
+p2_1 <- ggplot(bbdd, aes(x = SchoolDaysFromMay302022, y = ListedInDropoutReport)) +
   geom_point(alpha = 0.2, color = "darkgrey") +
   geom_vline(xintercept = 0, color = "red", linetype = "dashed", size = 1) +
   geom_smooth(data = subset(bbdd, SchoolDaysFromMay302022 < 0),
               method = "lm", se = FALSE, color = "blue") +
   geom_smooth(data = subset(bbdd, SchoolDaysFromMay302022 >= 0),
               method = "lm", se = FALSE, color = "green") +
-  labs(title = "1st Stage Graph",
+  labs(title = "P2 - First Stage Graph",
        x = "Días escolares desde 30 de mayo 2022",
        y = "Probabilidad de estar listado en el reporte")
+p2_1
+
+ggsave(filename = "./outputs/P2_graf_firststage.png",
+       plot = p2_1, width = 7, height = 5)
 
 #b)
 # Variable indicadora: 1 si dropout antes del 30 mayo
 bbdd$DroppedOutMay30Before <- ifelse(bbdd$SchoolDaysFromMay302022 < 0, 1, 0)
 
-# Modelo con efectos fijos de escuela
+# Modelo FE
 model_firststage_fe <- feols(
   ListedInDropoutReport ~ DroppedOutMay30Before * SchoolDaysFromMay302022 | IDschool,
   data = bbdd
 )
 
-summary(model_firststage_fe)
+model_firststage_fe
+
+# Guardar tabla HTML
+modelsummary(model_firststage_fe,
+             output = "./outputs/P2_reg_firststage_FE.html")
 
 
 #c)
 
-ggplot(bbdd, aes(x = DayOfWeekDroppedOut)) +
+p2_2 <- ggplot(bbdd, aes(x = DayOfWeekDroppedOut)) +
   geom_bar(fill = "lightblue", color = "black") +
-  labs(title = "Frecuencia de retiros por día de la semana",
+  labs(title = "P2 - Frecuencia de retiros por día de la semana",
        x = "Día de la semana de retiro",
        y = "Número de estudiantes")
+
+p2_2
+
+ggsave(filename = "./outputs/P2_graph_dayofweek.png",
+       plot = p2_2, width = 7, height = 5)
 
 model_firststage_week <- lm(ListedInDropoutReport ~ DroppedOutMay30Before +
                               SchoolDaysFromMay302022 +
@@ -110,7 +138,11 @@ model_firststage_week <- lm(ListedInDropoutReport ~ DroppedOutMay30Before +
                               factor(DayOfWeekDroppedOut),
                             data = bbdd)
 
-summary(model_firststage_week)
+model_firststage_week
+
+# Guardar tabla HTML
+modelsummary(model_firststage_week,
+             output = "./outputs/P2_reg_firststage_week.html")
 
 
 
