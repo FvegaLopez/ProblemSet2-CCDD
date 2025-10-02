@@ -71,30 +71,50 @@ rdplotdensity(dens_test, bbdd$SchoolDaysFromMay302022)
 # 2. First stage graph
 # ============================================================
 
-# (a) Gráfico
-# (a) Gráfico con bbdd
 ggplot(bbdd, aes(x = SchoolDaysFromMay302022, y = ListedInDropoutReport)) +
-  geom_point(alpha = 0.3) +
-  geom_vline(xintercept = 0, color = "red", linetype = "dashed") +
+  geom_point(alpha = 0.2, color = "darkgrey") +
+  geom_vline(xintercept = 0, color = "red", linetype = "dashed", size = 1) +
   geom_smooth(data = subset(bbdd, SchoolDaysFromMay302022 < 0),
               method = "lm", se = FALSE, color = "blue") +
   geom_smooth(data = subset(bbdd, SchoolDaysFromMay302022 >= 0),
               method = "lm", se = FALSE, color = "green") +
-  labs(title = "First stage graph",
-       x = "Running variable (days from May 30)",
-       y = "Prob. de estar listado en el reporte")
+  labs(title = "1st Stage Graph",
+       x = "Días escolares desde 30 de mayo 2022",
+       y = "Probabilidad de estar listado en el reporte")
+
+#b)
+# Variable indicadora: 1 si dropout antes del 30 mayo
+bbdd$DroppedOutMay30Before <- ifelse(bbdd$SchoolDaysFromMay302022 < 0, 1, 0)
+
+# Modelo con efectos fijos de escuela
+model_firststage_fe <- feols(
+  ListedInDropoutReport ~ DroppedOutMay30Before * SchoolDaysFromMay302022 | IDschool,
+  data = bbdd
+)
+
+summary(model_firststage_fe)
 
 
-# (b) Regresión con FE por escuela
-fs_model <- feols(ListedInDropoutReport ~ DroppedOutMay30Before *
-                    SchoolDaysFromMay302022 | IDschool, data = bbdd)
-summary(fs_model)
+#c)
 
-# (c) Incluir FE por día de la semana
-fs_model_dow <- feols(ListedInDropoutReport ~ DroppedOutMay30Before *
-                        SchoolDaysFromMay302022 | IDschool + DayOfWeekDroppedOut,
-                      data = bbdd)
-summary(fs_model_dow)
+ggplot(bbdd, aes(x = DayOfWeekDroppedOut)) +
+  geom_bar(fill = "lightblue", color = "black") +
+  labs(title = "Frecuencia de retiros por día de la semana",
+       x = "Día de la semana de retiro",
+       y = "Número de estudiantes")
+
+model_firststage_week <- lm(ListedInDropoutReport ~ DroppedOutMay30Before +
+                              SchoolDaysFromMay302022 +
+                              DroppedOutMay30Before:SchoolDaysFromMay302022 +
+                              factor(IDschool) +
+                              factor(DayOfWeekDroppedOut),
+                            data = bbdd)
+
+summary(model_firststage_week)
+
+
+
+
 
 ```
 
