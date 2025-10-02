@@ -63,20 +63,13 @@ p2
 ggsave(filename = "./outputs/grafico2_histograma_lineal.png", plot = p2, width = 7, height = 5)
 
 
+library(xtable)
+
 # Test de densidad
 dens_test <- rddensity(X = bbdd$SchoolDaysFromMay302022, c = 0)
 dens_test
 res <- summary(dens_test)
 
-# Extraer tabla de resultados principales (tests)
-df_res <- as.data.frame(res$tests)
-df_res$Method <- rownames(res$tests)
-
-# Guardar en HTML
-df_res %>%
-  kbl(caption = "Test de densidad en el cutoff") %>%
-  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover")) %>%
-  save_kable("outputs/P1_rddensity_test.html")
 
 # Guardar gráfico de densidad
 png(filename = "./outputs/grafico3_rddensity.png", width = 800, height = 600)
