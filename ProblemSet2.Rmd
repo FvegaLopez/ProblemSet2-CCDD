@@ -67,8 +67,8 @@ library(xtable)
 
 # Test de densidad
 dens_test <- rddensity(X = bbdd$SchoolDaysFromMay302022, c = 0)
-dens_test
-res <- summary(dens_test)
+summary(dens_test)
+
 
 
 # Guardar gráfico de densidad
@@ -99,7 +99,7 @@ p2_1 <- ggplot(bbdd, aes(x = SchoolDaysFromMay302022, y = ListedInDropoutReport)
               method = "lm", se = FALSE, color = "blue") +
   geom_smooth(data = subset(bbdd, SchoolDaysFromMay302022 >= 0),
               method = "lm", se = FALSE, color = "green") +
-  labs(title = "P2 - First Stage Graph",
+  labs(title = "P2 - 1st Stage",
        x = "Días escolares desde 30 de mayo 2022",
        y = "Probabilidad de estar listado en el reporte")
 p2_1
@@ -108,8 +108,6 @@ ggsave(filename = "./outputs/P2_graf_firststage.png",
        plot = p2_1, width = 7, height = 5)
 
 #b)
-# Variable indicadora: 1 si dropout antes del 30 mayo
-bbdd$DroppedOutMay30Before <- ifelse(bbdd$SchoolDaysFromMay302022 < 0, 1, 0)
 
 # Modelo FE
 model_firststage_fe <- feols(
@@ -121,7 +119,7 @@ model_firststage_fe
 
 # Guardar tabla HTML
 modelsummary(model_firststage_fe,
-             output = "./outputs/P2_reg_firststage_FE.html")
+             output = "./outputs/P2_reg_firststage_EF.html")
 
 
 #c)
@@ -134,21 +132,21 @@ p2_2 <- ggplot(bbdd, aes(x = DayOfWeekDroppedOut)) +
 
 p2_2
 
-ggsave(filename = "./outputs/P2_graph_dayofweek.png",
+ggsave(filename = "./outputs/P2_graf_semana.png",
        plot = p2_2, width = 7, height = 5)
 
-model_firststage_week <- lm(ListedInDropoutReport ~ DroppedOutMay30Before +
-                              SchoolDaysFromMay302022 +
-                              DroppedOutMay30Before:SchoolDaysFromMay302022 +
-                              factor(IDschool) +
-                              factor(DayOfWeekDroppedOut),
-                            data = bbdd)
+model_firststage_week <- feols(
+  ListedInDropoutReport ~ DroppedOutMay30Before * SchoolDaysFromMay302022 | 
+    IDschool + DayOfWeekDroppedOut,
+  data = bbdd,
+  cluster = ~IDschool   # opcional: errores clusterizados por escuela
+)
 
 model_firststage_week
 
 # Guardar tabla HTML
 modelsummary(model_firststage_week,
-             output = "./outputs/P2_reg_firststage_week.html")
+             output = "./outputs/P2_reg_firststage_semana.html")
 
 
 
