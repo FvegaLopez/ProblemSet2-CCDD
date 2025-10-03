@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_0zzsssf2fy09w0du4gv6</title>
+    <title>tinytable_i1bz67j1jtfh9zqn0ue6</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
@@ -12,8 +12,8 @@
 
     <script>
 
-      function styleCell_0zzsssf2fy09w0du4gv6(i, j, css_id) {
-          var table = document.getElementById("tinytable_0zzsssf2fy09w0du4gv6");
+      function styleCell_i1bz67j1jtfh9zqn0ue6(i, j, css_id) {
+          var table = document.getElementById("tinytable_i1bz67j1jtfh9zqn0ue6");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -23,7 +23,7 @@
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_0zzsssf2fy09w0du4gv6');
+        var table = document.getElementById('tinytable_i1bz67j1jtfh9zqn0ue6');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -31,8 +31,8 @@
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_0zzsssf2fy09w0du4gv6(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_0zzsssf2fy09w0du4gv6");
+      function spanCell_i1bz67j1jtfh9zqn0ue6(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_i1bz67j1jtfh9zqn0ue6");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -62,20 +62,20 @@
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 17, j: 1 },  ], css_id: 'tinytable_css_f6xyqgsrj12i2qe19jnl',}, 
-          { positions: [ { i: 6, j: 1 },  ], css_id: 'tinytable_css_30rwq9gevn9eeu158i52',}, 
-          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 10, j: 1 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 }, { i: 14, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 15, j: 1 }, { i: 16, j: 1 },  ], css_id: 'tinytable_css_plsuk20kj0apkcewvd3e',}, 
-          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_ok9opm9c1lsbuhnttne8',}, 
-          { positions: [ { i: 17, j: 0 },  ], css_id: 'tinytable_css_t7lclw9n8iyaj41jejk4',}, 
-          { positions: [ { i: 6, j: 0 },  ], css_id: 'tinytable_css_c3ibmxf5r4pbcxxbo7lf',}, 
-          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 10, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 14, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 },  ], css_id: 'tinytable_css_1yh4c0avoznzu3y1ogst',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_1041wx1w3o0n7r7apjfk',}, 
+          { positions: [ { i: 21, j: 1 },  ], css_id: 'tinytable_css_up39o53mxeh98myvtkbe',}, 
+          { positions: [ { i: 10, j: 1 },  ], css_id: 'tinytable_css_ibo57eeuswfirs0l3e3p',}, 
+          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 7, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 }, { i: 14, j: 1 }, { i: 11, j: 1 }, { i: 12, j: 1 }, { i: 13, j: 1 }, { i: 18, j: 1 }, { i: 15, j: 1 }, { i: 16, j: 1 }, { i: 17, j: 1 }, { i: 19, j: 1 }, { i: 20, j: 1 },  ], css_id: 'tinytable_css_v8ji7m4vwrl0ngddf1n1',}, 
+          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_7dnmej5gcr4uni4royc9',}, 
+          { positions: [ { i: 21, j: 0 },  ], css_id: 'tinytable_css_1muagicdz6pdmbxfi3zc',}, 
+          { positions: [ { i: 10, j: 0 },  ], css_id: 'tinytable_css_7kxdpee5fmjotf6lzkzt',}, 
+          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 14, j: 0 }, { i: 11, j: 0 }, { i: 12, j: 0 }, { i: 13, j: 0 }, { i: 18, j: 0 }, { i: 15, j: 0 }, { i: 16, j: 0 }, { i: 17, j: 0 }, { i: 19, j: 0 }, { i: 20, j: 0 },  ], css_id: 'tinytable_css_0kgql3okkz4xp3w4a8vm',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_18g6o3yz4pp5dy18cpm5',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_0zzsssf2fy09w0du4gv6(cell.i, cell.j, group.css_id);
+                  styleCell_i1bz67j1jtfh9zqn0ue6(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -83,19 +83,19 @@
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_f6xyqgsrj12i2qe19jnl, .table th.tinytable_css_f6xyqgsrj12i2qe19jnl { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_30rwq9gevn9eeu158i52, .table th.tinytable_css_30rwq9gevn9eeu158i52 { text-align: center; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_plsuk20kj0apkcewvd3e, .table th.tinytable_css_plsuk20kj0apkcewvd3e { text-align: center; }
-      .table td.tinytable_css_ok9opm9c1lsbuhnttne8, .table th.tinytable_css_ok9opm9c1lsbuhnttne8 { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_t7lclw9n8iyaj41jejk4, .table th.tinytable_css_t7lclw9n8iyaj41jejk4 { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_c3ibmxf5r4pbcxxbo7lf, .table th.tinytable_css_c3ibmxf5r4pbcxxbo7lf { text-align: left; border-bottom: solid black 0.05em; }
-      .table td.tinytable_css_1yh4c0avoznzu3y1ogst, .table th.tinytable_css_1yh4c0avoznzu3y1ogst { text-align: left; }
-      .table td.tinytable_css_1041wx1w3o0n7r7apjfk, .table th.tinytable_css_1041wx1w3o0n7r7apjfk { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_up39o53mxeh98myvtkbe, .table th.tinytable_css_up39o53mxeh98myvtkbe { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_ibo57eeuswfirs0l3e3p, .table th.tinytable_css_ibo57eeuswfirs0l3e3p { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_v8ji7m4vwrl0ngddf1n1, .table th.tinytable_css_v8ji7m4vwrl0ngddf1n1 { text-align: center; }
+      .table td.tinytable_css_7dnmej5gcr4uni4royc9, .table th.tinytable_css_7dnmej5gcr4uni4royc9 { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_1muagicdz6pdmbxfi3zc, .table th.tinytable_css_1muagicdz6pdmbxfi3zc { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_7kxdpee5fmjotf6lzkzt, .table th.tinytable_css_7kxdpee5fmjotf6lzkzt { text-align: left; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_0kgql3okkz4xp3w4a8vm, .table th.tinytable_css_0kgql3okkz4xp3w4a8vm { text-align: left; }
+      .table td.tinytable_css_18g6o3yz4pp5dy18cpm5, .table th.tinytable_css_18g6o3yz4pp5dy18cpm5 { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_0zzsssf2fy09w0du4gv6" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+      <table class="table table-borderless" id="tinytable_i1bz67j1jtfh9zqn0ue6" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
         <thead>
-        
+        <caption>RD cuadrático - Graduated in 2022</caption>
               <tr>
                 <th scope="col"> </th>
                 <th scope="col">(1)</th>
@@ -105,15 +105,23 @@
         <tbody>
                 <tr>
                   <td>DroppedOutMay30Before</td>
-                  <td>0.342</td>
+                  <td>0.048</td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td>(0.020)</td>
+                  <td>(0.034)</td>
                 </tr>
                 <tr>
                   <td>SchoolDaysFromMay302022</td>
-                  <td>0.003</td>
+                  <td>-0.001</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>(0.004)</td>
+                </tr>
+                <tr>
+                  <td>I(SchoolDaysFromMay302022^2)</td>
+                  <td>0.000</td>
                 </tr>
                 <tr>
                   <td></td>
@@ -121,11 +129,19 @@
                 </tr>
                 <tr>
                   <td>DroppedOutMay30Before × SchoolDaysFromMay302022</td>
-                  <td>-0.008</td>
+                  <td>-0.003</td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td>(0.001)</td>
+                  <td>(0.005)</td>
+                </tr>
+                <tr>
+                  <td>DroppedOutMay30Before × I(SchoolDaysFromMay302022^2)</td>
+                  <td>0.000</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>(0.000)</td>
                 </tr>
                 <tr>
                   <td>Num.Obs.</td>
@@ -133,31 +149,31 @@
                 </tr>
                 <tr>
                   <td>R2</td>
-                  <td>0.437</td>
+                  <td>0.359</td>
                 </tr>
                 <tr>
                   <td>R2 Adj.</td>
-                  <td>0.233</td>
+                  <td>0.126</td>
                 </tr>
                 <tr>
                   <td>R2 Within</td>
-                  <td>0.166</td>
+                  <td>0.002</td>
                 </tr>
                 <tr>
                   <td>R2 Within Adj.</td>
-                  <td>0.166</td>
+                  <td>0.001</td>
                 </tr>
                 <tr>
                   <td>AIC</td>
-                  <td>7573.9</td>
+                  <td>11758.9</td>
                 </tr>
                 <tr>
                   <td>BIC</td>
-                  <td>23562.6</td>
+                  <td>27761.7</td>
                 </tr>
                 <tr>
                   <td>RMSE</td>
-                  <td>0.29</td>
+                  <td>0.37</td>
                 </tr>
                 <tr>
                   <td>Std.Errors</td>
