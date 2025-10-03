@@ -158,22 +158,43 @@ modelsummary(model_firststage_week,
 
 ```{r}
 
-#RD lineal EnrolledByAug312022
-
+# ============================================================
+# RD lineal - EnrolledByAug312022
+# ============================================================
 rd_enrolled <- feols(
-  EnrolledByAug312022 ~ DroppedOutMay30Before + SchoolDaysFromMay302022 + DroppedOutMay30Before:SchoolDaysFromMay302022 | 
-  IDschool + DayOfWeekDroppedOut,
-  data = bbdd, cluster = "IDschool" #esto hace que los errores estándar se ajusten por correlación dentro de cada escuela
+  EnrolledByAug312022 ~ DroppedOutMay30Before +
+    SchoolDaysFromMay302022 +
+    DroppedOutMay30Before:SchoolDaysFromMay302022 | 
+    IDschool + DayOfWeekDroppedOut,
+  data = bbdd,
+  cluster = "IDschool"
 )
+
 summary(rd_enrolled)
 
-#RD lineal GraduatedIn2022
+# Guardar resultados como HTML
+modelsummary(rd_enrolled,
+             output = "./outputs/P3_reg_enrolled.html",
+             title = "RD lineal - Enrolled by Aug 31, 2022")
+
+# ============================================================
+# RD lineal - GraduatedIn2022
+# ============================================================
 rd_graduated <- feols(
-  GraduatedIn2022 ~ DroppedOutMay30Before + SchoolDaysFromMay302022 + DroppedOutMay30Before:SchoolDaysFromMay302022 | 
-  IDschool + DayOfWeekDroppedOut,
-  data = bbdd, cluster = "IDschool"
+  GraduatedIn2022 ~ DroppedOutMay30Before +
+    SchoolDaysFromMay302022 +
+    DroppedOutMay30Before:SchoolDaysFromMay302022 | 
+    IDschool + DayOfWeekDroppedOut,
+  data = bbdd,
+  cluster = "IDschool"
 )
+
 summary(rd_graduated)
+
+# Guardar resultados como HTML
+modelsummary(rd_graduated,
+             output = "./outputs/P3_reg_graduated.html",
+             title = "RD lineal - Graduated in 2022")
 
 
 ```
@@ -193,8 +214,14 @@ plot_graduated <- rdplot(y = bbdd$GraduatedIn2022, x = bbdd$SchoolDaysFromMay302
 g1 <- plot_enrolled$rdplot
 g2 <- plot_graduated$rdplot
 
-#Combinar gráficos 
-ggarrange(g1, g2, ncol = 2, nrow = 1)
+# Guardar cada gráfico por separado
+ggsave("./outputs/P3_graf_enrolado.png", g1, width = 7, height = 5, dpi = 300)
+ggsave("./outputs/P3_graf_graduado.png", g2, width = 7, height = 5, dpi = 300)
+
+# Combinar y guardar juntos
+g_combined <- ggarrange(g1, g2, ncol = 2, nrow = 1)
+g_combined
+ggsave("./outputs/P3_grapf_combinado.png", g_combined, width = 12, height = 5, dpi = 300)
 
 ```
 
@@ -211,6 +238,11 @@ rd_quad_enrolled <- feols(
 )
 summary(rd_quad_enrolled)
 
+# Guardar resultados como HTML
+modelsummary(rd_quad_enrolled,
+             output = "./outputs/P5_reg_enrolado.html",
+             title = "RD cuadrático - Enrolled by Aug 31, 2022")
+
 #GraduatedIn2022 con términos cuadráticos
 rd_quad_graduated <- feols(
   GraduatedIn2022 ~ DroppedOutMay30Before +
@@ -221,21 +253,36 @@ rd_quad_graduated <- feols(
 )
 summary(rd_quad_graduated)
 
+# Guardar resultados como HTML
+modelsummary(rd_quad_graduated,
+             output = "./outputs/P5_reg_graduado.html",
+             title = "RD cuadrático - Graduated in 2022")
+
 ```
 
 ### Pregunta 6
 
 ```{r}
 #Proyección cuadrática
-plot_quad <- rdplot(y = bbdd$EnrolledByAug312022, x = bbdd$SchoolDaysFromMay302022, c = 0, p = 2,
+plot_cuad <- rdplot(y = bbdd$EnrolledByAug312022, x = bbdd$SchoolDaysFromMay302022, c = 0, p = 2,
                     title = "Revinculación - Proyección cuadrática")
 
 #Proyección cúbica
 plot_cubic <- rdplot(y = bbdd$EnrolledByAug312022, x = bbdd$SchoolDaysFromMay302022, c = 0, p = 3,
                      title = "Revinculación - Proyección cúbica")
 
-#Combinar ambos gráficos
-ggarrange(plot_quad$rdplot, plot_cubic$rdplot, ncol = 2, nrow = 1)
+# Extraer gráficos ggplot
+g_cuad <- plot_cuad$rdplot
+g_cubic <- plot_cubic$rdplot
+
+# Guardar por separado
+ggsave("./outputs/P5_graf_cuad.png", g_cuad, width = 7, height = 5, dpi = 300)
+ggsave("./outputs/P5_graf_cubic.png", g_cubic, width = 7, height = 5, dpi = 300)
+
+# Combinar y guardar juntos (lado a lado)
+g_combinado <- ggarrange(g_cuad, g_cubic, ncol = 2, nrow = 1)
+g_combinado
+ggsave("./outputs/P5_graf_cuad_cubic_combinado.png", g_combinado, width = 12, height = 5, dpi = 300)
 
 ```
 
