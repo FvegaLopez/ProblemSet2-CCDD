@@ -16,6 +16,8 @@ library(ggpubr)     # Combinar gráficos
 library(modelsummary)
 library(knitr)
 library(kableExtra)
+library(rlang)
+library(xtable)
 ```
 
 ```{r}
@@ -63,7 +65,6 @@ p2
 ggsave(filename = "./outputs/grafico2_histograma_lineal.png", plot = p2, width = 7, height = 5)
 
 
-library(xtable)
 
 # Test de densidad
 dens_test <- rddensity(X = bbdd$SchoolDaysFromMay302022, c = 0)
@@ -214,13 +215,13 @@ g1 <- plot_enrolled$rdplot
 g2 <- plot_graduated$rdplot
 
 # Guardar cada gráfico por separado
-ggsave("./outputs/P3_graf_enrolado.png", g1, width = 7, height = 5, dpi = 300)
-ggsave("./outputs/P3_graf_graduado.png", g2, width = 7, height = 5, dpi = 300)
+ggsave("./outputs/P4_graf_enrolado.png", g1, width = 7, height = 5, dpi = 300)
+ggsave("./outputs/P4_graf_graduado.png", g2, width = 7, height = 5, dpi = 300)
 
 # Combinar y guardar juntos
 g_combined <- ggarrange(g1, g2, ncol = 2, nrow = 1)
 g_combined
-ggsave("./outputs/P3_grapf_combinado.png", g_combined, width = 12, height = 5, dpi = 300)
+ggsave("./outputs/P4_grapf_combinado.png", g_combined, width = 12, height = 5, dpi = 300)
 
 ```
 
@@ -275,13 +276,13 @@ g_cuad <- plot_cuad$rdplot
 g_cubic <- plot_cubic$rdplot
 
 # Guardar por separado
-ggsave("./outputs/P5_graf_cuad.png", g_cuad, width = 7, height = 5, dpi = 300)
-ggsave("./outputs/P5_graf_cubic.png", g_cubic, width = 7, height = 5, dpi = 300)
+ggsave("./outputs/P6_graf_cuad.png", g_cuad, width = 7, height = 5, dpi = 300)
+ggsave("./outputs/P6_graf_cubic.png", g_cubic, width = 7, height = 5, dpi = 300)
 
 # Combinar y guardar juntos (lado a lado)
 g_combinado <- ggarrange(g_cuad, g_cubic, ncol = 2, nrow = 1)
 g_combinado
-ggsave("./outputs/P5_graf_cuad_cubic_combinado.png", g_combinado, width = 12, height = 5, dpi = 300)
+ggsave("./outputs/P6_graf_cuad_cubic_combinado.png", g_combinado, width = 12, height = 5, dpi = 300)
 
 ```
 
