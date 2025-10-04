@@ -119,7 +119,9 @@ model_firststage_fe
 
 # Guardar tabla HTML
 modelsummary(model_firststage_fe,
-             output = "./outputs/P2_reg_firststage_EF.html")
+             output = "./outputs/P2_reg_firststage_EF.html",
+             coef_omit = "IDschool",   
+             gof_omit = "IC|Log|F")
 
 
 #c)
@@ -146,12 +148,9 @@ model_firststage_week
 
 # Guardar tabla HTML
 modelsummary(model_firststage_week,
-             output = "./outputs/P2_reg_firststage_semana.html")
-
-
-
-
-
+             output = "./outputs/P2_reg_firststage_semana.html",
+             coef_omit = "IDschool|DayOfWeekDroppedOut",
+             gof_omit = "IC|Log|F")
 ```
 
 ### Pregunta 3
