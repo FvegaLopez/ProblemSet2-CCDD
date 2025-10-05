@@ -286,4 +286,43 @@ ggsave("./outputs/P6_graf_cuad_cubic_combinado.png", g_combinado, width = 12, he
 
 ```
 
-### WAR
+### Pregunta 7
+
+```{r}
+library(rdrobust)
+
+rdplot(y = bbdd$GraduatedIn2021,
+       x = bbdd$SchoolDaysFromMay302022,
+       c = 0,                  # cutoff en 0 días (30 mayo 2022)
+       p = 1,                  # proyección lineal a cada lado
+       binselect = "esmv",     # método de bins sugerido
+       x.label = "Días escolares desde 30 de mayo 2022",
+       y.label = "Graduated in 2021",
+       title = "RD Placebo: GraduatedIn2021 vs. SchoolDaysFromMay302022")
+```
+
+### Pregunta 8
+
+```{r}
+
+# Ajuste lineal RD incluyendo covariables de pretratamiento
+# outcome: GraduatedIn2021
+# running: SchoolDaysFromMay302022
+# cutoff: 0
+# covariables: GPAin2021, AttendanceIn2021, Female, Migrant
+
+modelo_placebo_cov <- rdrobust(y = bbdd$GraduatedIn2021,
+                               x = bbdd$SchoolDaysFromMay302022,
+                               covs = bbdd[, c("GPAin2021","AttendanceIn2021","Female","Migrant")],
+                               c = 0, p = 1)
+
+summary(modelo_placebo_cov)
+
+# rdplot sólo grafica el ajuste sin covariables, pero sirve para visualizar
+rdplot(y = bbdd$GraduatedIn2021,
+       x = bbdd$SchoolDaysFromMay302022,
+       c = 0, p = 1,
+       x.label = "Días escolares desde 30 de mayo 2022",
+       y.label = "Graduated in 2021",
+       title = "RD Placebo con covariables: GraduatedIn2021 vs SchoolDaysFromMay302022")
+```
