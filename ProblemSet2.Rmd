@@ -18,6 +18,7 @@ library(knitr)
 library(kableExtra)
 library(rlang)
 library(xtable)
+library(AER)
 ```
 
 ```{r}
@@ -289,16 +290,19 @@ ggsave("./outputs/P6_graf_cuad_cubic_combinado.png", g_combinado, width = 12, he
 ### Pregunta 7
 
 ```{r}
-library(rdrobust)
+p7 <- rdplot(y = bbdd$GraduatedIn2021,
+            x = bbdd$SchoolDaysFromMay302022,
+            c = 0,
+            p = 1,
+            binselect = "esmv",
+            x.label = "Días escolares desde 30 de mayo 2022",
+            y.label = "Graduated in 2021",
+            title = "RD Placebo: GraduatedIn2021 vs. SchoolDaysFromMay302022")
 
-rdplot(y = bbdd$GraduatedIn2021,
-       x = bbdd$SchoolDaysFromMay302022,
-       c = 0,                  # cutoff en 0 días (30 mayo 2022)
-       p = 1,                  # proyección lineal a cada lado
-       binselect = "esmv",     # método de bins sugerido
-       x.label = "Días escolares desde 30 de mayo 2022",
-       y.label = "Graduated in 2021",
-       title = "RD Placebo: GraduatedIn2021 vs. SchoolDaysFromMay302022")
+p7
+
+# Guardar el gráfico en alta resolución
+ggplot2::ggsave("P7_rd_placebo_graduated2021.png", plot = p7$rdplot, width = 8, height = 6, dpi = 300)
 ```
 
 ### Pregunta 8
@@ -318,11 +322,50 @@ modelo_placebo_cov <- rdrobust(y = bbdd$GraduatedIn2021,
 
 summary(modelo_placebo_cov)
 
-# rdplot sólo grafica el ajuste sin covariables, pero sirve para visualizar
-rdplot(y = bbdd$GraduatedIn2021,
-       x = bbdd$SchoolDaysFromMay302022,
-       c = 0, p = 1,
-       x.label = "Días escolares desde 30 de mayo 2022",
-       y.label = "Graduated in 2021",
-       title = "RD Placebo con covariables: GraduatedIn2021 vs SchoolDaysFromMay302022")
+# --- Crear gráfico RD (sin covariables, solo visualización) ---
+p8 <- rdplot(
+  y = bbdd$GraduatedIn2021,
+  x = bbdd$SchoolDaysFromMay302022,
+  c = 0,
+  p = 1,
+  x.label = "Días escolares desde 30 de mayo 2022",
+  y.label = "Graduated in 2021",
+  title = "RD Placebo con covariables: GraduatedIn2021 vs. SchoolDaysFromMay302022"
+)
+
+p8
+
+# --- Guardar el gráfico en alta resolución ---
+ggsave("P8_rd_placebo_cov_graduated2021.png", plot = p8$rdplot, width = 8, height = 6, dpi = 300)
+```
+
+### Pregunta 9
+
+Pregunta teórica
+
+### Pregunta 10
+
+```{r}
+# Pregunta 10b: RD Fuzzy con Variables Instrumentales (2SLS)
+
+# --- Primera etapa (First Stage) ---
+first_stage <- feols(
+  ListedInDropoutReport ~ DroppedOutMay30Before * SchoolDaysFromMay302022 | 
+    IDschool + DayOfWeekDroppedOut,
+  data = bbdd
+)
+summary(first_stage)
+
+# Ajuste del modelo
+iv_model <- ivreg(
+  EnrolledByAug312022 ~ ListedInDropoutReport * SchoolDaysFromMay302022 +
+    factor(IDschool) + factor(DayOfWeekDroppedOut) |
+    DroppedOutMay30Before * SchoolDaysFromMay302022 +
+    factor(IDschool) + factor(DayOfWeekDroppedOut),
+  data = bbdd
+)
+
+# Mostrar solo coeficientes que contengan las variables relevantes
+coefs <- coef(summary(iv_model))
+coefs[grep("ListedInDropoutReport|SchoolDaysFromMay302022|Intercept", rownames(coefs)), ]
 ```
