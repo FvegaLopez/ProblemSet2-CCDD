@@ -302,7 +302,7 @@ p7 <- rdplot(y = bbdd$GraduatedIn2021,
 p7
 
 # Guardar el gráfico en alta resolución
-ggplot2::ggsave("P7_rd_placebo_graduated2021.png", plot = p7$rdplot, width = 8, height = 6, dpi = 300)
+ggplot2::ggsave("./outputs/P7_rd_placebo_graduated2021.png", plot = p7$rdplot, width = 8, height = 6, dpi = 300)
 ```
 
 ### Pregunta 8
@@ -336,7 +336,7 @@ p8 <- rdplot(
 p8
 
 # --- Guardar el gráfico en alta resolución ---
-ggsave("P8_rd_placebo_cov_graduated2021.png", plot = p8$rdplot, width = 8, height = 6, dpi = 300)
+ggsave("./outputs/P8_rd_placebo_cov_graduated2021.png", plot = p8$rdplot, width = 8, height = 6, dpi = 300)
 ```
 
 ### Pregunta 9
@@ -368,4 +368,38 @@ iv_model <- ivreg(
 # Mostrar solo coeficientes que contengan las variables relevantes
 coefs <- coef(summary(iv_model))
 coefs[grep("ListedInDropoutReport|SchoolDaysFromMay302022|Intercept", rownames(coefs)), ]
+
+
+# --- Guardar la primera etapa por separado ---
+modelsummary(
+  first_stage,
+  output = "./outputs/p10_first_stage.html",
+  title = "Primera Etapa (First Stage) - RD Fuzzy",
+  stars = TRUE,
+  gof_omit = "AIC|BIC|Log.Lik|RMSE",
+  coef_map = c(
+    "(Intercept)" = "Intercepto",
+    "DroppedOutMay30Before" = "Desertó antes del 30 de mayo",
+    "SchoolDaysFromMay302022" = "Días escolares desde el 30 de mayo",
+    "DroppedOutMay30Before:SchoolDaysFromMay302022" = "Interacción: Deserción × Días"
+  ),
+  fmt = 3
+)
+
+# --- Guardar el modelo IV por separado ---
+modelsummary(
+  iv_model,
+  output = "./outputs/p10_iv.html",
+  title = "Modelo IV (2SLS) - RD Fuzzy",
+  stars = TRUE,
+  gof_omit = "AIC|BIC|Log.Lik|RMSE",
+  coef_map = c(
+    "(Intercept)" = "Intercepto",
+    "ListedInDropoutReport" = "Listado en reporte de deserción",
+    "SchoolDaysFromMay302022" = "Días escolares desde el 30 de mayo",
+    "ListedInDropoutReport:SchoolDaysFromMay302022" = "Interacción: Reporte × Días escolares"
+  ),
+  fmt = 3
+)
+
 ```
